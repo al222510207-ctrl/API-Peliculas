@@ -1,3 +1,6 @@
+<!-- Copyright (c) [2025] [René Peña Martínez]. Licensed under CC BY 4.0. -->
+<!-- Full license text available at https://creativecommons.org -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -5,10 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cartelera - API MOVIES</title>
 
-    <!-- Fuentes: Bebas Neue (títulos), Special Elite (máquina de escribir) y DM Sans (texto) -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
 
-    <!-- Hoja de estilos propia (ahora sí está enlazada) -->
+    <!-- Hoja de estilos propia -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,8 +22,8 @@
                 <h1 class="titulo-sitio">CARTELERA</h1>
                 <p class="subtitulo-sitio">API PROYECTO EN EQUIPO · Catálogo de películas</p>
             </div>
-            <!-- Cambien este texto por los nombres de su equipo -->
-            <span class="sello-equipo">Hecho por: Nombre 1 · Nombre 2 · Nombre 3</span>
+            <!-- nombres del equipo -->
+            <span class="sello-equipo">Hecho por: Christian · Arlette · Aruna Michelle · Angel </span>
         </div>
         <div class="foquitos"></div>
     </header>
@@ -73,17 +75,36 @@
 
             <!-- Contenedor de la Galería -->
             <div class="galeria" id="gallery">
-                <!-- Las tarjetas se generan dinámicamente -->
             </div>
         </main>
     </div>
 
     <footer class="pie">
-        <p>© 2026 API Proyecto en Equipo. Catálogo interactivo con diseño original.</p>
+        <p>© 2026 API Proyecto en Equipo. Catálogo interactivo </p>
     </footer>
 
     <script>
+        /**
+         * =============================================================================
+         * SCRIPT: CATALOGO DE PELICULAS - JAVASCRIPT NATIVO -
+         * Copyright (c) [2025] [René Peña Martínez]. Licensed under CC BY 4.0.
+         * Full license text available at https://creativecommons.org
+         * =============================================================================
+         *
+         * GUIA TECNICA :
+         * 1. Manipulacion de elementos del DOM mediante document.getElementById.
+         * 2. Manejo de eventos (input, change).
+         * 3. Consumo del servicio web con la API nativa fetch() y async / await.
+         * 4. Control de excepciones mediante bloques try / catch.
+         * 5. Procesamiento de la estructura de datos JSON provista por la API.
+         * 6. Generacion dinamica de nodos HTML.
+         * =============================================================================
+         */
+
+        // Peliculas actualmente mostradas
         let peliculas = [];
+
+        // Referencias a los elementos de la interfaz
         const galleryContainer = document.getElementById('gallery');
         const counterBadge = document.getElementById('counter-badge');
         const searchInput = document.getElementById('search-input');
@@ -144,6 +165,9 @@
             }
         }
 
+        /**
+         * Solicitud HTTP GET asincrona a la API peliculas
+         */
         async function cargarPeliculas() {
             try {
                 const response = await fetch('https://devsapihub.com/api-movies');
@@ -186,6 +210,9 @@
             return tituloMatch || generoESMatch || generoENMatch;
         }
 
+        /**
+         * Inserta las tarjetas en el contenedor de resultados
+         */
         function renderGallery() {
             galleryContainer.innerHTML = '';
             const selectedStars = document.querySelector('input[name="stars-filter"]:checked').value;
@@ -242,12 +269,14 @@
             counterBadge.textContent = `Mostrando ${itemsMostrados} películas`;
         }
 
+        // Eventos de los controles
         searchInput.addEventListener('input', renderGallery);
 
         document.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', renderGallery);
         });
 
+        // Carga inicial
         cargarPeliculas();
     </script>
 </body>

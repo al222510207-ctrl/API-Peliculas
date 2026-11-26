@@ -1,3 +1,6 @@
+/* Copyright (c) [2025] [René Peña Martínez]. Licensed under CC BY 4.0.
+   Full license text available at https://creativecommons.org */
+
 /* =========================================================
    CARTELERA - Estilo "cine de barrio"
    Paleta: vino, rojo boleto, mostaza y crema de papel viejo
@@ -30,7 +33,7 @@ body {
     flex-direction: column;
 }
 
-/* Scrollbar personalizado con los colores del cine */
+/* Scrollbar con los colores de cine */
 ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -77,7 +80,6 @@ body {
     font-size: 3rem;
     letter-spacing: 4px;
     color: var(--crema);
-    /* Sombra desplazada para dar efecto de letrero */
     text-shadow: 3px 3px 0 var(--rojo), 6px 6px 0 rgba(0, 0, 0, 0.35);
     line-height: 1;
 }
@@ -90,7 +92,6 @@ body {
     letter-spacing: 1px;
 }
 
-/* Sello del equipo (cambien el texto en el HTML) */
 .sello-equipo {
     font-family: 'Special Elite', monospace;
     font-size: 0.8rem;
@@ -208,7 +209,7 @@ body {
     color: var(--mostaza);
 }
 
-/* Diseño estilizado de los botones de radio (ahora en color mostaza) */
+/* Diseño estilizado de los botones de radio */
 input[type='radio'] {
     accent-color: var(--mostaza);
     width: 16px;
@@ -240,7 +241,6 @@ input[type='radio'] {
     padding: 10px 0;
     border-top: 14px solid transparent;
     border-bottom: 14px solid transparent;
-    /* Tira de película arriba y abajo del título */
     border-image: repeating-linear-gradient(
         90deg,
         var(--crema) 0 10px,
@@ -289,7 +289,6 @@ input[type='radio'] {
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
 }
 
-/* Al pasar el mouse el boleto se inclina un poco, como si lo levantaras */
 .movie-card:nth-child(odd):hover {
     transform: translateY(-6px) rotate(-1deg);
     box-shadow: 10px 12px 0 var(--rojo);
@@ -386,7 +385,6 @@ input[type='radio'] {
     color: var(--crema);
 }
 
-/* Descripción limitada a 3 líneas */
 .descripcion {
     font-size: 0.8rem;
     line-height: 1.5;
@@ -435,6 +433,61 @@ input[type='radio'] {
     text-align: center;
     color: var(--rojo);
     font-weight: 700;
+}
+
+/* ---------- FILTRO DE GÉNEROS ---------- */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    background: transparent;
+    color: #cbb99a;
+    border: 1.5px solid var(--vino);
+    border-radius: 3px;
+    padding: 4px 9px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.chip:hover {
+    border-color: var(--mostaza);
+    color: var(--mostaza);
+}
+.chip.activo {
+    background: var(--mostaza);
+    color: var(--tinta);
+    border-color: var(--mostaza);
+}
+
+/* Botón "Cargar más" */
+.contenedor-mas {
+    text-align: center;
+    margin-top: 34px;
+}
+.btn-mas {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    background: var(--rojo);
+    color: var(--crema);
+    border: 2px solid var(--crema);
+    border-radius: 3px;
+    padding: 8px 28px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--vino);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-mas:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--mostaza);
+}
+.btn-mas:disabled {
+    opacity: 0.5;
+    cursor: wait;
 }
 
 /* ---------- PIE DE PÁGINA ---------- */
