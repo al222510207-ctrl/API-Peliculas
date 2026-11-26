@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartelera - API MOVIES</title>
+
+    <!-- Fuentes: Bebas Neue (títulos), Special Elite (máquina de escribir) y DM Sans (texto) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Hoja de estilos propia (ahora sí está enlazada) -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Encabezado con cortina de teatro y marquesina -->
+    <header class="cabecera">
+        <div class="cabecera-contenido">
+            <div>
+                <h1 class="titulo-sitio">CARTELERA</h1>
+                <p class="subtitulo-sitio">API PROYECTO EN EQUIPO · Catálogo de películas</p>
+            </div>
+            <!-- Cambien este texto por los nombres de su equipo -->
+            <span class="sello-equipo">Hecho por: Nombre 1 · Nombre 2 · Nombre 3</span>
+        </div>
+        <div class="foquitos"></div>
+    </header>
+
+    <!-- Contenedor con Sidebar y Galería -->
+    <div class="contenedor">
+
+        <!-- Sidebar Izquierdo -->
+        <aside class="sidebar">
+            <h2>Taquilla</h2>
+
+            <!-- Buscador en tiempo real -->
+            <div class="grupo-filtro">
+                <label for="search-input" class="etiqueta">Buscar película o género</label>
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Ej. Acción, Drama..."
+                >
+                <p class="ayuda">Escribe categorías en español o inglés.</p>
+            </div>
+
+            <!-- Categoría por Calificación (Estrellas) -->
+            <div class="grupo-filtro">
+                <h3>Calificación (Estrellas)</h3>
+                <label class="opcion-filtro">
+                    <input type="radio" name="stars-filter" value="todos" checked>
+                    <span>Todas las calificaciones</span>
+                </label>
+                <label class="opcion-filtro">
+                    <input type="radio" name="stars-filter" value="5">
+                    <span>5 Estrellas (★ 5)</span>
+                </label>
+                <label class="opcion-filtro">
+                    <input type="radio" name="stars-filter" value="4">
+                    <span>4 Estrellas (★ 4)</span>
+                </label>
+            </div>
+
+            <p class="nota-sidebar">Devs API Hub con traducción dinámica.</p>
+        </aside>
+
+        <!-- Área de Contenido Principal -->
+        <main class="principal">
+            <div class="barra-galeria">
+                <h2>Galería de Películas</h2>
+                <span id="counter-badge">Cargando y traduciendo...</span>
+            </div>
+
+            <!-- Contenedor de la Galería -->
+            <div class="galeria" id="gallery">
+                <!-- Las tarjetas se generan dinámicamente -->
+            </div>
+        </main>
+    </div>
+
+    <footer class="pie">
+        <p>© 2026 API Proyecto en Equipo. Catálogo interactivo con diseño original.</p>
+    </footer>
+
+    <script>
+        let peliculas = [];
+        const galleryContainer = document.getElementById('gallery');
+        const counterBadge = document.getElementById('counter-badge');
+        const searchInput = document.getElementById('search-input');
+
+        // Diccionario para traducir géneros al español
+        const diccionarioGeneros = {
+            'action': 'Acción',
+            'adventure': 'Aventura',
+            'animation': 'Animación',
+            'biography': 'Biografía',
+            'comedy': 'Comedia',
+            'crime': 'Crimen',
+            'documentary': 'Documental',
+            'drama': 'Drama',
+            'family': 'Familiar',
+            'fantasy': 'Fantasía',
+            'film-noir': 'Cine Negro',
+            'history': 'Historia',
+            'horror': 'Terror',
+            'music': 'Música',
+            'musical': 'Musical',
+            'mystery': 'Misterio',
+            'romance': 'Romance',
+            'sci-fi': 'Ciencia Ficción',
+            'science fiction': 'Ciencia Ficción',
+            'sport': 'Deportes',
+            'thriller': 'Suspenso',
+            'war': 'Bélica',
+            'western': 'Viejo Oeste'
+        };
+
+        function traducirGenero(generoIngles) {
+            if (!generoIngles) return '';
+            const clave = generoIngles.toLowerCase().trim();
+            return diccionarioGeneros[clave] || generoIngles;
+        }
+
+        function normalizarTexto(texto) {
+            return texto
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .trim();
+        }
+
+        async function traducirResena(textoIngles) {
+            if (!textoIngles) return 'Sin reseña disponible.';
+            try {
+                const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textoIngles)}&langpair=en|es`;
+                const res = await fetch(url);
+                const data = await res.json();
+                if (data && data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                }
+                return textoIngles;
+            } catch (e) {
+                return textoIngles;
+            }
+        }
+
+        async function cargarPeliculas() {
+            try {
+                const response = await fetch('https://devsapihub.com/api-movies');
+                const datosCrudos = await response.json();
+
+                peliculas = datosCrudos.map(peli => ({
+                    ...peli,
+                    generosES: Array.isArray(peli.genre) ? peli.genre.map(traducirGenero) : [],
+                    descripcionES: peli.description
+                }));
+
+                renderGallery();
+
+                await Promise.all(
+                    peliculas.map(async (peli) => {
+                        peli.descripcionES = await traducirResena(peli.description);
+                    })
+                );
+
+                renderGallery();
+            } catch (error) {
+                console.error('Error al cargar la API:', error);
+                galleryContainer.innerHTML = '<p class="mensaje-error">Error al conectar con la API de películas.</p>';
+            }
+        }
+
+        function coincideEstrellas(stars, filtro) {
+            if (filtro === 'todos') return true;
+            return Math.floor(stars) === parseInt(filtro);
+        }
+
+        function coincideBusqueda(peli, texto) {
+            if (!texto) return true;
+            const query = normalizarTexto(texto);
+
+            const tituloMatch = peli.title && normalizarTexto(peli.title).includes(query);
+            const generoESMatch = peli.generosES.some(g => normalizarTexto(g).includes(query));
+            const generoENMatch = Array.isArray(peli.genre) && peli.genre.some(g => normalizarTexto(g).includes(query));
+
+            return tituloMatch || generoESMatch || generoENMatch;
+        }
+
+        function renderGallery() {
+            galleryContainer.innerHTML = '';
+            const selectedStars = document.querySelector('input[name="stars-filter"]:checked').value;
+            const searchText = searchInput.value;
+
+            let itemsMostrados = 0;
+
+            peliculas.forEach(peli => {
+                const matchStars = coincideEstrellas(peli.stars, selectedStars);
+                const matchSearch = coincideBusqueda(peli, searchText);
+
+                if (matchStars && matchSearch) {
+                    itemsMostrados++;
+                    const card = document.createElement('div');
+                    card.className = 'movie-card';
+
+                    const generosHTML = peli.generosES.length > 0
+                        ? peli.generosES.map(g => `<span class="genre-pill">${g}</span>`).join('')
+                        : '<span class="genre-pill">Sin género</span>';
+
+                    // Tarjeta con forma de boleto de cine
+                    card.innerHTML = `
+                        <div>
+                            <div class="image-container">
+                                <img src="${peli.image_url}" alt="${peli.title}" onerror="this.style.display='none'">
+                                <span class="sello-estrellas">★ ${peli.stars}</span>
+                            </div>
+                            <div class="tarjeta-cuerpo">
+                                <h3>${peli.title}</h3>
+                                <p class="anio">Año: ${peli.year}</p>
+                                <div class="generos">
+                                    ${generosHTML}
+                                </div>
+                                <p class="descripcion">${peli.descripcionES}</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-talon">
+                            <span>ADMITE UNO</span>
+                            <span>BOLETO #${peli.id}</span>
+                        </div>
+                    `;
+                    galleryContainer.appendChild(card);
+                }
+            });
+
+            if (itemsMostrados === 0 && peliculas.length > 0) {
+                galleryContainer.innerHTML = `
+                    <div class="sin-resultados">
+                        <p>No se encontraron películas que coincidan con "${searchText}"</p>
+                    </div>
+                `;
+            }
+
+            counterBadge.textContent = `Mostrando ${itemsMostrados} películas`;
+        }
+
+        searchInput.addEventListener('input', renderGallery);
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', renderGallery);
+        });
+
+        cargarPeliculas();
+    </script>
+</body>
+</html>

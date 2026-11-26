@@ -1,0 +1,464 @@
+/* =========================================================
+   CARTELERA - Estilo "cine de barrio"
+   Paleta: vino, rojo boleto, mostaza y crema de papel viejo
+   ========================================================= */
+
+/* Variables de color para cambiar la paleta desde un solo lugar */
+:root {
+    --fondo: #1b1112;
+    --fondo-claro: #2a1a1c;
+    --vino: #7a1f26;
+    --rojo: #c8372d;
+    --mostaza: #e8a93a;
+    --crema: #f4e8cf;
+    --crema-oscuro: #e3d2ad;
+    --tinta: #2a1b17;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--fondo);
+    color: var(--crema);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Scrollbar personalizado con los colores del cine */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--fondo);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--vino);
+    border: 2px solid var(--fondo);
+    border-radius: 6px;
+    transition: background 0.3s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--rojo);
+}
+
+/* ---------- ENCABEZADO: cortina de teatro + marquesina con foquitos ---------- */
+.cabecera {
+    /* Franjas verticales que simulan una cortina */
+    background: repeating-linear-gradient(
+        90deg,
+        #5e151b 0px,
+        #7a1f26 28px,
+        #5e151b 56px
+    );
+    border-bottom: 4px solid var(--mostaza);
+    position: relative;
+    padding: 22px 20px 30px;
+}
+
+.cabecera-contenido {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.titulo-sitio {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 4px;
+    color: var(--crema);
+    /* Sombra desplazada para dar efecto de letrero */
+    text-shadow: 3px 3px 0 var(--rojo), 6px 6px 0 rgba(0, 0, 0, 0.35);
+    line-height: 1;
+}
+
+.subtitulo-sitio {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.85rem;
+    color: var(--mostaza);
+    margin-top: 6px;
+    letter-spacing: 1px;
+}
+
+/* Sello del equipo (cambien el texto en el HTML) */
+.sello-equipo {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--crema);
+    border: 2px dashed var(--mostaza);
+    padding: 6px 12px;
+    transform: rotate(-2deg);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+/* Foquitos de la marquesina que parpadean */
+.foquitos {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6px;
+    height: 14px;
+    background: radial-gradient(circle, var(--mostaza) 3px, transparent 4px) 0 0 / 24px 14px repeat-x;
+    animation: parpadeo 1.6s steps(2, end) infinite;
+}
+
+@keyframes parpadeo {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.35; }
+    100% { opacity: 1; }
+}
+
+/* ---------- LAYOUT PRINCIPAL ---------- */
+.contenedor {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+}
+
+/* ---------- SIDEBAR: letrero de taquilla ---------- */
+.sidebar {
+    width: 18rem;
+    flex-shrink: 0;
+    background: var(--fondo-claro);
+    padding: 24px 20px;
+    border-right: 3px double var(--vino);
+}
+
+.sidebar h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+    color: var(--mostaza);
+    border-bottom: 2px dashed var(--vino);
+    padding-bottom: 6px;
+    margin-bottom: 22px;
+}
+
+.sidebar h3 {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.95rem;
+    color: var(--crema);
+    margin-bottom: 10px;
+}
+
+.grupo-filtro {
+    margin-bottom: 26px;
+}
+
+.grupo-filtro label.etiqueta {
+    display: block;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+.ayuda {
+    font-size: 0.72rem;
+    color: #a89580;
+    margin-top: 6px;
+}
+
+/* Campo de búsqueda con aspecto de boleto */
+#search-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--crema);
+    color: var(--tinta);
+    border: 2px solid var(--tinta);
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    box-shadow: 3px 3px 0 var(--rojo);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+#search-input:focus {
+    outline: none;
+    transform: translate(-1px, -1px);
+    box-shadow: 5px 5px 0 var(--mostaza);
+}
+#search-input::placeholder {
+    color: #8a7660;
+}
+
+/* Opciones del filtro de estrellas */
+.opcion-filtro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #cbb99a;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.opcion-filtro:hover {
+    background: rgba(232, 169, 58, 0.12);
+    color: var(--mostaza);
+}
+
+/* Diseño estilizado de los botones de radio (ahora en color mostaza) */
+input[type='radio'] {
+    accent-color: var(--mostaza);
+    width: 16px;
+    height: 16px;
+}
+
+.nota-sidebar {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.75rem;
+    color: #a89580;
+    border-top: 2px dashed var(--vino);
+    padding-top: 14px;
+    margin-top: 30px;
+}
+
+/* ---------- CONTENIDO PRINCIPAL ---------- */
+.principal {
+    flex: 1;
+    padding: 28px;
+}
+
+.barra-galeria {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 26px;
+    padding: 10px 0;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+    /* Tira de película arriba y abajo del título */
+    border-image: repeating-linear-gradient(
+        90deg,
+        var(--crema) 0 10px,
+        transparent 10px 20px
+    ) 14;
+    opacity: 1;
+}
+
+.barra-galeria h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 3px;
+    color: var(--crema);
+}
+
+/* Contador de películas con forma de boleto */
+#counter-badge {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    background: var(--mostaza);
+    color: var(--tinta);
+    padding: 5px 14px;
+    border-radius: 3px;
+    transform: rotate(1.5deg);
+    border: 2px solid var(--tinta);
+}
+
+/* Cuadrícula de la galería */
+.galeria {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 28px;
+}
+
+/* ---------- TARJETAS: boletos de cine ---------- */
+.movie-card {
+    background: var(--crema);
+    color: var(--tinta);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 6px 6px 0 var(--vino);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+/* Al pasar el mouse el boleto se inclina un poco, como si lo levantaras */
+.movie-card:nth-child(odd):hover {
+    transform: translateY(-6px) rotate(-1deg);
+    box-shadow: 10px 12px 0 var(--rojo);
+}
+.movie-card:nth-child(even):hover {
+    transform: translateY(-6px) rotate(1deg);
+    box-shadow: 10px 12px 0 var(--rojo);
+}
+
+/* Contenedor de imagen tipo póster enmarcado */
+.image-container {
+    overflow: hidden;
+    position: relative;
+    height: 16rem;
+    margin: 12px 12px 0;
+    border: 2px solid var(--tinta);
+    background: repeating-linear-gradient(45deg, #3b2a25, #3b2a25 8px, #46332d 8px, #46332d 16px);
+}
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.35) contrast(1.05);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
+}
+.movie-card:hover .image-container img {
+    transform: scale(1.07);
+    filter: sepia(0) contrast(1.05);
+}
+
+/* Sello circular con la calificación */
+.sello-estrellas {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--mostaza);
+    border: 2px solid var(--tinta);
+    color: var(--tinta);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(10deg);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.tarjeta-cuerpo {
+    padding: 14px 16px 16px;
+}
+
+.tarjeta-cuerpo h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 1px;
+    line-height: 1.05;
+    margin-bottom: 6px;
+}
+
+.anio {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.78rem;
+    color: var(--vino);
+    margin-bottom: 10px;
+}
+
+.generos {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+/* Etiquetas de géneros cinematográficos como sellos de tinta */
+.genre-pill {
+    font-family: 'Special Elite', monospace;
+    background-color: transparent;
+    border: 1.5px solid var(--vino);
+    border-radius: 3px;
+    padding: 1px 7px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--vino);
+    display: inline-block;
+    margin: 2px 4px 2px 0;
+    transition: all 0.2s ease;
+}
+.movie-card:hover .genre-pill {
+    background-color: var(--vino);
+    color: var(--crema);
+}
+
+/* Descripción limitada a 3 líneas */
+.descripcion {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Talón del boleto con línea punteada y muescas a los lados */
+.tarjeta-talon {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 2px dashed var(--tinta);
+    background: var(--crema-oscuro);
+    font-family: 'Special Elite', monospace;
+    font-size: 0.72rem;
+}
+.tarjeta-talon::before,
+.tarjeta-talon::after {
+    content: '';
+    position: absolute;
+    top: -11px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--fondo);
+}
+.tarjeta-talon::before { left: -10px; }
+.tarjeta-talon::after  { right: -10px; }
+
+/* Mensaje cuando no hay resultados */
+.sin-resultados {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 16px;
+    border: 3px dashed var(--vino);
+    font-family: 'Special Elite', monospace;
+    color: var(--mostaza);
+}
+
+.mensaje-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--rojo);
+    font-weight: 700;
+}
+
+/* ---------- PIE DE PÁGINA ---------- */
+.pie {
+    background: var(--fondo-claro);
+    border-top: 4px solid var(--mostaza);
+    text-align: center;
+    padding: 22px 12px;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: #a89580;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 800px) {
+    .contenedor {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 3px double var(--vino);
+    }
+    .titulo-sitio {
+        font-size: 2.2rem;
+    }
+}
